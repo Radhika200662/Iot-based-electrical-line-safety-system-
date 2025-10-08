@@ -1,0 +1,39 @@
+#define RELAY_PIN 8
+#define BUZZER 9
+#define LED 10
+#define CURRENT_SENSOR A0
+
+int currentValue = 0;
+int threshold = 100; // Adjust based on sensor output
+
+void setup() {
+  pinMode(RELAY_PIN, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+  pinMode(LED, OUTPUT);
+  Serial.begin(9600);
+  Serial.println("IoT Based Electrical Line Safety System Started");
+}
+
+void loop() {
+  currentValue = analogRead(CURRENT_SENSOR);
+  Serial.print("Current Sensor Value: ");
+  Serial.println(currentValue);
+
+  if (currentValue > threshold) {
+    // Line active - unsafe to work
+    digitalWrite(RELAY_PIN, HIGH);
+    digitalWrite(LED, HIGH);
+    digitalWrite(BUZZER, HIGH);
+    Serial.println("⚠️ Line is LIVE - DO NOT TOUCH!");
+    delay(2000);
+  } 
+  else {
+    // Line safe
+    digitalWrite(RELAY_PIN, LOW);
+    digitalWrite(LED, LOW);
+    digitalWrite(BUZZER, LOW);
+    Serial.println("✅ Line is SAFE to work on.");
+  }
+
+  delay(1000);
+}
